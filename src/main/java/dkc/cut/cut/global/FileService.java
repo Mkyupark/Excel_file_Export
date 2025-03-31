@@ -7,36 +7,36 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 @Service
 public class FileService {
 
 	// 파일 생성 경로지정
-	private static final String DIRECTORY = "C:\\cuting\\info";
-	
-	// 초기에 프로그램 실행시 폴더 한번만 열도록 설정하기 위한 변수
-	private static int folderOpen = -1;
+	private static final String DIRECTORY = "C:\\cutting\\info";
 	
 	// 폴더 생성
 	public void createFolder() throws IOException {
 		try {
 			Path path = Paths.get(DIRECTORY);
             Files.createDirectories(path);
-            System.out.println("-------------- 디렉토리 생성 성공 --------------" );
-            System.out.println("디렉토리 경로: "+ path);
-            System.out.println("--------------------------------------------\n");
+            log.info("디렉토리 생성 성공: {}", path.toAbsolutePath());
 		}catch(IOException e) {
-			System.out.println("-------------- 디렉토리 생성 실패 --------------");
-			System.out.println(e.getMessage());
+			log.error("디렉토리 생성 실패", e);
+			//e.printStackTrace();
 		}
 	}
+	
 	// 파일에 값 쓰기
 	// Content 예외처리는 BolCutWorkOrderEntity 생성후 생각
     public void createFile(String filename, String content) throws IOException {
-        Path path = Paths.get(DIRECTORY, filename + ".info");	// 파일 저장 경로 지정
+        Path path = Paths.get(DIRECTORY, filename + ".ini");	// 파일 저장 경로 지정
         Files.write(path, content.getBytes());		// path 경로에 2번째 인자값 적기
-        //System.out.println("파일명: " + path.getFileName());
-        //System.out.println("파일 생성 경로: " + path.toFile().getAbsolutePath() + "\n");
-        openFileAndFolder(path.toFile());
+        System.out.println("파일명: " + path.getFileName());
+        System.out.println("파일 생성 경로: " + path.toFile().getAbsolutePath() + "\n");
+        log.info("파일 생성 성공: {}", path.toAbsolutePath());
+        //openFileAndFolder(path.toFile());
     }
 
     // 현재 디렉토리에 있는 파일 전체 삭제 코드
@@ -49,15 +49,17 @@ public class FileService {
                 .filter(Files::isRegularFile) // 하위 디렉토리는 무시하고 일반 파일만 필터링
                 .forEach(path -> {
                     try {
+                    	log.info("디렉토리에 있는 기존 파일이 전체 삭제되었습니다.");
                         Files.delete(path); // 파일 삭제
                     } catch (IOException e) {
-                    	//log.warn("Failed to delete " + path + ": " + e.getMessage());
+                    	log.error("파일 삭제 실패 - 대상 경로: {}", path, e);
+                        //e.printStackTrace(); // 스택 트레이스 출력
                     }
                 });
         }
     }
     
-    // 생성시 파일 열기
+    // 생성시 파일 열기 (사용 X)
     private void openFileAndFolder(File file) {
         try {
             String parentDir = file.getParent(); // 파일이 있는 폴더 경로

@@ -16,6 +16,8 @@ public class BolCutWorkOrderDTO {
 	// 절단순서 
 	private Number cutSeq;
 	
+	private Number orderThickness;
+	
 	// 폭 
 	private Number orderWidth;
 
@@ -36,21 +38,22 @@ public class BolCutWorkOrderDTO {
 
 	public void setBolCutWorkOrderDTO(Object[] row) {
 		
-		final String changeWidthToLength = (String) row[5];
+		final String changeWidthToLength = (String) row[6];
 		this.setCutSeq((Number) row[0]);
-	    this.setWlChange((String) row[5]);
-	    this.setLotNumber((String) row[6]);
+	    this.setWlChange((String) row[6]);
+	    this.setLotNumber((String) row[7]);
+	    this.setOrderThickness((Number) row[1]); 
 	    
 		if(changeWidthToLength.equalsIgnoreCase("Y")) {
-			this.setOrderWidth((Number) row[2]);
-		    this.setOrderLength((Number) row[1]); 
-		    this.setWidthTolerance((Number) row[4]); 
-		    this.setLengthTolerance((Number) row[3]);	
-		}else {
-			this.setOrderWidth((Number) row[1]);
+			this.setOrderWidth((Number) row[3]);
 		    this.setOrderLength((Number) row[2]); 
-		    this.setWidthTolerance((Number) row[3]); 
-		    this.setLengthTolerance((Number) row[4]);				
+		    this.setWidthTolerance((Number) row[5]); 
+		    this.setLengthTolerance((Number) row[4]);	
+		}else {
+			this.setOrderWidth((Number) row[2]);
+		    this.setOrderLength((Number) row[3]); 
+		    this.setWidthTolerance((Number) row[4]); 
+		    this.setLengthTolerance((Number) row[5]);				
 		}
     }
 

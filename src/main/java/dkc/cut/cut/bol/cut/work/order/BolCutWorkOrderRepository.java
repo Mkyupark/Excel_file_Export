@@ -32,6 +32,7 @@ public class BolCutWorkOrderRepository {
                                                    Number resourceId) {
         String sql = 
             "SELECT CUT_SEQ, " +
+            "       ORDER_THICKNESS, " +
             "       ORDER_WIDTH, " +
             "       ORDER_LENGTH, " +
             "       WIDTH_TOLERANCE, " +
@@ -44,7 +45,7 @@ public class BolCutWorkOrderRepository {
             "   AND RESOURCE_ID     = :resourceId " +
             "   AND RECORD_STATUS   = 'ACTIVE' " +
             " ORDER BY CUT_SEQ";
-
+        
         @SuppressWarnings("unchecked")
         List<Object[]> rows = em.createNativeQuery(sql)
                                 .setParameter("organizationId", organizationId)
@@ -77,7 +78,8 @@ public class BolCutWorkOrderRepository {
                 "SET 	RECORD_STATUS = 'INACTIVE' " +
                 "WHERE  ORGANIZATION_ID = :organizationId AND " +
                 "       RAW_LOT_NUMBER = :rawLotNumber AND " +
-                "       RESOURCE_ID = :resourceId";
+                "       RESOURCE_ID = :resourceId AND " +
+                "		RECORD_STATUS = 'ACTIVE'";
 
         int updatedCount = em.createNativeQuery(sql)
 	                         .setParameter("organizationId", organizationId)
